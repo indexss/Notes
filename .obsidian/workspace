@@ -1,0 +1,136 @@
+{
+  "main": {
+    "id": "d758da2adf320663",
+    "type": "split",
+    "children": [
+      {
+        "id": "727d9f7c3c88ab25",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Java/Java Core Class.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "14e458729623087e",
+    "type": "split",
+    "children": [
+      {
+        "id": "cb2ea154f3b492dc",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5f4102b531e860c7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "5399aebcd2ac0012",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "482158867fabe987",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 225.5,
+    "collapsed": true
+  },
+  "right": {
+    "id": "23defec4886e4cee",
+    "type": "split",
+    "children": [
+      {
+        "id": "167a0fbd20e7e4de",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "aba334932706fae7",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Java/Java Core Class.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "f174ede38e7e9c33",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Java/Java Core Class.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "df27e796e79db813",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "649e6a27bb69a35f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Java/Java Core Class.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "727d9f7c3c88ab25",
+  "lastOpenFiles": [
+    "Java/Java Core Class.md"
+  ]
+}

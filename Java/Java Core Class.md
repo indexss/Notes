@@ -4,8 +4,8 @@
 4. 去除收尾空白 trim() 去除中文空白strip() 
 5. isEmpty()空？ isBlank() 空白（无信息）？
 6. 替换字串 s1.replace("aa", "bb");     s1.replaceAll("正则", "被替换的东西")
-7. 分割字符串 string[] ss = s.split("正则");
-8. 拼接字符串 String[] arr = {"A", "B", "C"}；
+7. 分割字符串 string[ ] ss = s.split("正则");
+8. 拼接字符串 String[ ] arr = {"A", "B", "C"}；
 
 ​						   String s = String.join("***, arr");
 
@@ -119,7 +119,7 @@ var s = String.join(", ", names);
     如果class的定义符合以下规范：
 
     		- 通过private来实例化字段
-
+		
     		- 通过public方法来获得字段信息
 
     如
@@ -148,7 +148,7 @@ var s = String.join(", ", names);
 
     get叫做getter 读方法 set叫做setter 写方法 他们读写的东西叫做属性
 
-    只有getter就是只读 室友setter就是只写（不常见）
+    只有getter就是只读 只有setter就是只写（不常见）
 
 18. 枚举类
 
@@ -311,7 +311,7 @@ var s = String.join(", ", names);
 
         若将compact constructor 改写为class形式 如下
 
-        ```
+        ```java
         public final class Point extends Record {
             public Point(int x, int y) {
                 // 这是我们编写的Compact Constructor:
@@ -326,7 +326,262 @@ var s = String.join(", ", names);
         }
         ```
 
-        
+        record还有更简洁的写法
 
-        
+        ```java
+        public class Main{
+            public static void main(String[] args) {
+                var z = Point.of();
+                var p = Point.of(3,4);
+            }
+        }
+        record Point(int x, int y){
+            public static Point of(){
+                return new Point(0, 0);
+            }
+            public static Point of(int x, int y){
+                return new Point(x, y);
+            }
+        }
+        ```
 
+20. BigInteger
+
+    java中 硬件最大整形是64位的long型整数 。
+
+    若超过long型 就要用到软件模拟
+
+    java中就是用java.math.BigInteger来表示任意大小的整数。
+
+    其内部原理是用一个很大的int[]来模拟一个非常大的整数
+
+    ```java
+    import java.math.BigInteger;
+    public class Main{
+        public static void main(String[] args) {
+            BigInteger bi = new BigInteger("1234567890");
+            System.out.println(bi.pow(10));
+        }
+    }
+    ```
+
+​		对BigInteger操作 只能使用实例方法 比如加法运算
+
+​	
+
+```java
+BigInteger i1 = new BigInteger("1234567890");
+BigInteger i2 = new BigInteger("1234567899719047");
+BigInteger sum = i1.add(i2);
+```
+
+- 转换为`byte`：`byteValue()`
+- 转换为`short`：`shortValue()`
+- 转换为`int`：`intValue()`
+- 转换为`long`：`longValue()`
+- 转换为`float`：`floatValue()`
+- 转换为`double`：`doubleValue()`
+
+20. BigDecimal
+
+    `BigDecimal`是可以表示任何精度 且完全准确的浮点数
+
+    ```java
+    BigDecimal bd = new BigDecimal("123.5678");
+    Systom.out.println(bd.multiply(pd));
+    ```
+
+    `BigDecimal` 可以使用 `scale()` 方法来返回小数位数 且不忽略0
+
+    ```java
+    BigDecimal d1 = new BigDecimal("123.456");
+    BigDecimal d2 = new BigDecimal("123.0000");
+    System.out.println(d1.scale()); // 2
+    System.out.println(d2.scale()); // 4
+    ```
+
+    如果想要忽略0， 那么可以使用`stripTrailingZeros()`方法，返回的也是一个BigDecimal
+
+    ```java
+    BigDecimal d1 = new BigDecimal("123.0000");
+    BigDecimal d2 = d1.stripTrailingZeros();
+    ```
+
+    一个例子
+
+    ```java
+    import java.math.BigDecimal;
+    import java.math.BigInteger;
+    public class Main{
+        public static void main(String[] args) {
+            BigDecimal b1 = new BigDecimal("12345600");
+            BigDecimal b2 = b1.stripTrailingZeros();
+            System.out.println(b1.scale()); // 0
+            System.out.println(b2.scale()); // -2
+            System.out.println(b1); // 12345600
+            System.out.println(b2); // 1.23456E+7
+        }
+    }
+    ```
+
+    说明 直接创造的b1 与经过 `stripTrailingZreos()` 创造的b2是不一样的。经过stripTrailingZeros() 的BigDecimal使用scale() 方法时可能会返回负数。负数的位数就是这个整数后面有几个0。
+
+    可以对BigDecimal进行scale设置 `setScale()` 提供了这种方法.
+
+    ```java
+    public class Main{
+      public static void main(String[] args){
+        BigDecimal d1 = new BigDecimal("123.456789");
+        BigDecimal d2 = d1.setScale(4, RoundingMode.HALF_UP); //四舍五入 123.4568
+        BigDecimal d3 = d1.setScale(4, RoundingMode.DOWN) //直接截断 123.4567
+      }
+    }
+    ```
+
+    对BigDecimal做加，减，乘的时候，精度不会丢失，但是做除法时，有雨可能出现无法除尽的情况，所以要指定精度:
+
+    ```java
+    BigDecimal d1 = new BigDecimal("123.456");
+    BigDecimal d2 = new BigDecimal("23.45689");
+    BigDecimal d3 = d1.divide(d2, 10, RoundingMode.HALF_UP); // d2/d1 保留10位 四舍五入
+    BigDecimal d4 = d1.divide(d2); // 报错 除不尽
+    ```
+
+    如果想要模除 得到余数和商 那么可以这样写
+
+    ```java
+    public class Main{
+      public static void main(String[] args){
+        BigDecimal n = new BigDecimal("12.345");
+        BigDecimal m = new BigDecimal("0.12");
+        BigDecimal[] dr = n.divideAndRemainder(m);
+        System.out.println(dr[0]); //商
+        System.out.println(dr[1]); //余数
+      }
+    }
+    ```
+
+    这样 如果想判断一个BigDecimal是不是另一个的整数倍 可以
+
+    ```java
+    import java.math.BigDecimal;
+    public class Main{
+        public static void main(String[] args) {
+            BigDecimal b1 = new BigDecimal("12.75");
+            BigDecimal b2 = new BigDecimal("0.15");
+            BigDecimal[] dr = b1.divideAndRemainder(b2);
+            System.out.println(dr[1]);
+            System.out.println(dr[1].signum());
+        }
+    }
+    ```
+
+    其中 `signum()`方法是符号函数 正数1 负数-1 0为0
+
+    不要用`equals()`方法去比较两个BigDecimal 因为scale不同 但数值相同的情况会被判断为false
+
+    这是因为 BigDecimal这个类的字段有两个 一个是BigInteger intVal 一个是scale
+
+    只有两者都相同的时候 才会返回true
+
+    比较两个BigDecimal的正确方法是使用`compareTo()`
+
+    这个方法 两者相同时会返回0 两者不同时会返回-1
+
+21. 常用工具类
+
+    - Math
+
+      Math.abs()
+
+      Math.max(a, b)
+
+      Math.min(a, b)
+
+      Math.pow(a, b)
+
+      Math.sqrt(a);
+
+      Math.exp(a);
+
+      Math.log10(100);
+
+      Math.sin/cos/tan/asin/acos(a);
+
+      double pi = Math.PI;
+
+      double e = Math.E;
+
+      Math.random(); //生成一个 0 <= x < 1的随机数
+
+      如果想要生成一个范围在 [min, max)的随机数 可以这样写
+
+      ```java
+      public class Main{
+        public static void main(String[] args){
+          double x = Math.random();
+          double min = 10;
+          double max = 50;
+          double y = x*(max - min) + min;
+          long n = (long) y;
+          System.out.println(y);  // y是随机小数
+          System.out.println(n);  // n是随机整数
+        } 
+      }
+      ```
+
+      Java标准库还提供了一个StrickMath 是为了保证跨平台性的 速度慢 一般用Math就行了
+
+    - Random
+
+      可以使用Random；来创造伪随机数，也就是读取随机数表 这样就能解释`next`的意思了
+
+      Random r = new Random(seed); //如果不给种子 就默认为时间
+
+      r.nextInt(); 生成一个整数随机数
+
+      r.nextInt(10); 生成一个0-10之间的int
+
+      r.nextLong(); 生成一个long随机数
+
+      r.nextFloat(); 生成一个[0, 1)之间的float
+
+      r.nextDouble(); 生成一个[0, 1)之间的double
+
+    - SecureRandom
+
+      随机数有真伪之分。真正的随机数是通过量子力学获取的，但如果你只是想要获取一个不可预测的随机数的话，用SecureRandom足够。
+
+      `SecureRandom`无法指定种子 而是使用RNG(Random Number Generator)生成的，不同JDK的底层逻辑不一样
+
+      ```java
+      SecureRandom sr = new SecureRandom();
+      System.out.println(sr.nextInt());
+      ```
+
+      jdk的rng有多种底层实现 实际使用时 可以优先获取高强度的rng，如果没有提供的话，再使用普通等级的tng
+
+      ```java
+      import java.util.Arrays;
+      import java.security.SecureRandom;
+      import java.security.NoSuchAlgorithmException;
+      public class Main {
+          public static void main(String[] args) {
+              SecureRandom sr = null;
+              try {
+                  sr = SecureRandom.getInstanceStrong(); // 获取高强度安全随机数生成器
+              } catch (NoSuchAlgorithmException e) {
+                  sr = new SecureRandom(); // 获取普通的安全随机数生成器
+              }
+              byte[] buffer = new byte[16];
+              sr.nextBytes(buffer); // 用安全随机数填充buffer
+              System.out.println(Arrays.toString(buffer));
+          }
+      }
+      ```
+
+      
+
+      
+
+      
