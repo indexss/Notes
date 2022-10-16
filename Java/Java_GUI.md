@@ -390,11 +390,526 @@
          }
          ```
 
-         
+      6. 简易计算器
 
+         oop原则 组合大于继承
+
+         ```java
+         class A extends B{ //继承
+         }
+         ```
+
+         组合是这个样子的
+
+         ```java
+         class A{
+           public B b;
+           public C c;
+         }
+         ```
+
+         第一版的简易计算器的代码是这样的
+
+         ```java
+         package com.indexss.lesson02;
          
+         import org.w3c.dom.Text;
+         
+         import javax.swing.*;
+         import java.awt.*;
+         import java.awt.event.ActionEvent;
+         import java.awt.event.ActionListener;
+         import java.awt.event.WindowAdapter;
+         import java.awt.event.WindowEvent;
+         
+         //main
+         public class TestCalc {
+             public static void main(String[] args) {
+                 Calculator calculator = new Calculator(200, 200, 400, 400);
+             }
+         }
+         
+         //计算器类
+         class Calculator extends Frame{
+             public Calculator(int x, int y, int w, int h){
+         
+                 //重复性工作
+                 super();
+                 this.setBounds(x, y, w, h);
+         
+                 this.addWindowListener(new WindowAdapter() {
+         
+                     @Override
+                     public void windowClosing(WindowEvent e) {
+                         System.exit(0);
+                     }
+                 });
+         
+                 //三个文本框
+                 TextField textField1 = new TextField(10); //最多能填10个数字
+                 TextField textField2 = new TextField(10); //最多能填10个数字
+                 TextField textField3 = new TextField(20); //最多能填10个数字
+         
+                 //一个按钮
+                 Button button = new Button("=");
+                 button.addActionListener(new myActionListener(textField1, textField2, textField3));
+         
+                 //一个标签
+                 Label label = new Label("+");
+         
+                 //开始布局
+                 this.setLayout(new FlowLayout());
+                 this.add(textField1);
+                 this.add(label);
+                 this.add(textField2);
+                 this.add(button);
+                 this.add(textField3);
+                 this.pack();
+                 this.setVisible(true);
+             }
+         }
+         
+         //监听器类
+         class myActionListener implements ActionListener{
+             //获取三个变量
+             private TextField num1;
+             private TextField num2;
+             private TextField num3;
+             public myActionListener(TextField textField1, TextField textField2, TextField textField3){
+                 this.num1 = textField1;
+                 this.num2 = textField2;
+                 this.num3 = textField3;
+             }
+         
+             @Override
+             public void actionPerformed(ActionEvent e) {
+         
+                 //1. 获得两个加数
+                 double n1 = Double.parseDouble(num1.getText());
+                 double n2 = Double.parseDouble(num2.getText());
+         
+                 //2. 将结果放到第三个框
+                 double n3 = n1 + n2;
+                 num3.setText("" + n3);
+         
+                 //3. 清空前两个框
+                 num1.setText("");
+                 num2.setText("");
+             }
+         }
+         ```
+
+         当我们使用了「组合」的方式去解决监听器传入过多参数的问题时，代码是这样的
+
+         ```java
+         package com.indexss.lesson02;
+         import java.awt.*;
+         import java.awt.event.ActionEvent;
+         import java.awt.event.ActionListener;
+         import java.awt.event.WindowAdapter;
+         import java.awt.event.WindowEvent;
+         
+         public class cal{
+             public static void main(String[] args) {
+                 new Calculator().loadFrame();
+             }
+         }
+         
+         class Calculator extends Frame {
+             // 属性
+             TextField num1, num2, num3;
+             // 方法
+             public void loadFrame() {
+                 //新建组件
+                 num1 = new TextField(10);
+                 num2 = new TextField(10);
+                 num3 = new TextField(10);
+                 Button button = new Button("=");
+                 button.addActionListener(new MyCalculatorListener(this));
+                 Label label = new Label();
+                 
+                 //布局
+                 setLayout(new FlowLayout());
+                 add(num1);
+                 add(label);
+                 add(num2);
+                 add(button);
+                 add(num3);
+                 
+                 //经典操作
+                 addWindowListener(new WindowAdapter() {
+                     @Override
+                     public void windowClosing(WindowEvent e) {
+                         System.exit(0);
+                     }
+                 });
+                 this.pack();
+                 setVisible(true);
+             }
+         
+             class MyCalculatorListener implements ActionListener {
+                 //类的组合：不直接传入参数，而是传入封装的对象
+                 Calculator calculator = null;
+         
+                 public MyCalculatorListener(Calculator calculator) {
+                     this.calculator = calculator;
+                 }
+         
+                 @Override
+                 public void actionPerformed(ActionEvent e) {
+                     int n1 = Integer.parseInt(calculator.num1.getText());
+                     int n2 = Integer.parseInt(calculator.num2.getText());
+                     int result = n1 + n2;
+                     System.out.println();
+                     calculator.num3.setText("" + result);
+                     calculator.num1.setText("");
+                     calculator.num2.setText("");
+                 }
+             }
+         }
+         
+         ```
+
+         改动的方法就是，将我们直接要使用过的num1, num2, num3做成属性字段，然后再监听器汇总创造一个`Calculator`类的引用，然后通过调用Calculator来获得想要的num1,2,3.
+
+         当然，我们还可以使用「内部类」的方法去解决问题，这样过程中就有了更好的包装
+
+         ```java
+         package com.indexss.lesson02;
+         import java.awt.*;
+         import java.awt.event.ActionEvent;
+         import java.awt.event.ActionListener;
+         import java.awt.event.WindowAdapter;
+         import java.awt.event.WindowEvent;
+         
+         public class cal{
+             public static void main(String[] args) {
+                 new Calculator().loadFrame();
+             }
+         }
+         
+         class Calculator extends Frame {
+             // 属性
+             TextField num1, num2, num3;
+             // 方法
+             public void loadFrame() {
+                 //新建组件
+                 num1 = new TextField(10);
+                 num2 = new TextField(10);
+                 num3 = new TextField(10);
+                 Button button = new Button("=");
+                 button.addActionListener(new MyCalculatorListener());
+                 Label label = new Label();
+         
+                 //布局
+                 setLayout(new FlowLayout());
+                 add(num1);
+                 add(label);
+                 add(num2);
+                 add(button);
+                 add(num3);
+         
+                 //经典操作
+                 addWindowListener(new WindowAdapter() {
+                     @Override
+                     public void windowClosing(WindowEvent e) {
+                         System.exit(0);
+                     }
+                 });
+                 this.pack();
+                 setVisible(true);
+             }
+         
+             private  class MyCalculatorListener implements ActionListener {
+                 @Override
+                 public void actionPerformed(ActionEvent e) {
+                     int n1 = Integer.parseInt(num1.getText());
+                     int n2 = Integer.parseInt(num2.getText());
+                     int result = n1 + n2;
+                     System.out.println();
+                     num3.setText("" + result);
+                     num1.setText("");
+                     num2.setText("");
+                 }
+             }
+         
+         }
+         
+         ```
+
+         内部类是一个简化代码的过程。由于我们直接把MyCalculatorListener写到了Calculator这个类的里面，所以我们不需要再去写一个构造函数去获得calculator这个实例，因为内部类可以调用外部类的字段。在addActionListener的时候，我们可以直接拿到内部类。
+
+         我个人感觉这种方式虽然简洁，但是你需要对于作用域的概念十分清楚。而且因为写成了内部类的形式，我们不再能够将监听器单独写成一个类，这样也增加了我们维护代码的难度。所以我本人不会大面积地使用这种「阿里巴巴手册」中非常推崇的代码风格。
+
+         当然，这只是我个人的看法捏0.0
+
+         我还用lambda表达式去重写了一下监听器，样子是这样的
+
+         ```java
+         package com.indexss.lesson02;
+         import java.awt.*;
+         import java.awt.event.ActionEvent;
+         import java.awt.event.ActionListener;
+         import java.awt.event.WindowAdapter;
+         import java.awt.event.WindowEvent;
+         
+         public class cal{
+             public static void main(String[] args) {
+                 new Calculator().loadFrame();
+             }
+         }
+         
+         class Calculator extends Frame {
+             // 属性
+             TextField num1, num2, num3;
+             // 方法
+             public void loadFrame() {
+                 //新建组件
+                 num1 = new TextField(10);
+                 num2 = new TextField(10);
+                 num3 = new TextField(10);
+                 Button button = new Button("=");
+                 button.addActionListener((ActionEvent e)->{
+                     num3.setText(Integer.parseInt(num1.getText()) + Integer.parseInt(num2.getText())+"");
+                     num1.setText("");
+                     num2.setText("");
+                 });
+                 Label label = new Label();
+         
+                 //布局
+                 setLayout(new FlowLayout());
+                 add(num1);
+                 add(label);
+                 add(num2);
+                 add(button);
+                 add(num3);
+         
+                 //经典操作
+                 addWindowListener(new WindowAdapter() {
+                     @Override
+                     public void windowClosing(WindowEvent e) {
+                         System.exit(0);
+                     }
+                 });
+                 this.pack();
+                 setVisible(true);
+             }
+         }
+         
+         ```
+
+         反正就是越来越简洁，可读性越来越低
+
+      7. 画笔paint
+
+         ```java
+         package com.indexss;
+         
+         import java.awt.*;
+         
+         public class TestPaint {
+             public static void main(String[] args) {
+                 Paint paint = new Paint();
+                 paint.loadFrame();
+             }
+         }
+         
+         class Paint extends Frame {
+         
+             public void loadFrame(){
+                 setBounds(200,200,500,600);
+                 setVisible(true);
+             }
+         
+             @Override
+             public void paint(Graphics g) {
+                 //画笔，颜色，画的内容
+                 g.setColor(Color.green);
+                 g.drawOval(100,100,100,100);
+                 g.setColor(Color.BLUE);
+                 g.fillRect(200,200,100,100);
+         
+                 //画笔用完 把它还原成最初的颜色
+                 
+             }
+         }
+         ```
+
+      8. 鼠标监听
+
+         目的：监听鼠标点击坐标
+
+         ```java
+         package com.indexss;
+         
+         import java.awt.*;
+         import java.awt.event.MouseAdapter;
+         import java.awt.event.MouseEvent;
+         import java.awt.event.MouseListener;
+         import java.util.ArrayList;
+         import java.util.Iterator;
+         
+         //鼠标监听事件
+         public class TestMouseListener {
+             public static void main(String[] args) {
+                 MyFrame myFrame = new MyFrame("myFrame");
+             }
+         }
+         
+         class MyFrame extends Frame {
+             ArrayList points;
+             //画画需要画笔，需要监听鼠标当前的位置，需要集合来存储这个点
+             public MyFrame(String title){
+                 super(title);
+                 setBounds(200, 200, 400, 300);
+                 //存鼠标点击的点
+                 points = new ArrayList<>();
+                 //鼠标监听器，针对窗口来说的监听器，因为你不监听外面的世界
+                 this.addMouseListener(new MyMouseListener());
+         
+                 setVisible(true);
+             }
+         
+             @Override
+             public void paint(Graphics g) {
+                 //画画 需要监听鼠标的事件
+                 Iterator iterator = points.iterator();
+                 while(iterator.hasNext()){  //这两行可以不断发掘points类里面有没有新的对象，不会结束
+                     Point point = (Point) iterator.next();
+                     g.setColor(Color.CYAN);
+                     g.fillOval(point.x, point.y, 10, 10);
+                 }
+             }
+         
+             public void addPoint(Point point){
+                 points.add(point);
+             }
+         
+             private class MyMouseListener extends MouseAdapter {
+                 //鼠标点击：按下，弹起，按住不放
+         
+                 @Override
+                 public void mousePressed(MouseEvent e) {
+                     MyFrame myFrame = (MyFrame) e.getSource();
+                     //这里的getSource()返回的东西是调用，添加监听器的对象
+                     //我们的监听器显然是由MyFrame中的this创建的，所以说我们要让e.getSource()返回的Object类向下转型成为MyFrame类
+                     //这里点击的时候，界面上就会产生一个点
+                     //这个点就是鼠标的点
+                     myFrame.addPoint(new Point(e.getX(), e.getY()));
+                     //每次点击鼠标都需要重新画一遍
+                     //我们的过程是 先执行paint(执行while循环 迭代器探测有没有点)，然后获取鼠标点击坐标，然后将鼠标点击坐标实例化成一个点，然后加入到点集中。但是由于Frame类默认只会执行Paint一次，所以我们如果不加下面的repaint的话就画不出点。而由于现在所处的类是鼠标监听器，我们的repaint会被执行很多遍，所以可以话出多个点。
+                     //这个问题的关键就在于 Frame创建出来的时候，就一定会第一时间执行一次paint，所以我们第一次是绝对画不上点的。
+                     myFrame.repaint();
+         
+                 }
+             }
+         }
+         ```
+
+      9. 窗口监听
+
+         ```java
+         package com.indexss;
+         
+         import java.awt.*;
+         import java.awt.event.WindowAdapter;
+         import java.awt.event.WindowEvent;
+         import java.awt.event.WindowListener;
+         
+         public class TestWindow {
+             public static void main(String[] args) {
+                 new WindowFrame();
+             }
+         }
+         
+         class WindowFrame extends Frame{
+             public WindowFrame(){
+                 setBounds(200,200,500,500);
+                 setBackground(Color.BLUE);
+                 addWindowListener(new MyWindowListener());
+                 setVisible(true);
+         
+             }
+         
+             class MyWindowListener extends WindowAdapter {
+         
+                 //关闭窗口事件
+                 @Override
+                 public void windowClosing(WindowEvent e) {
+                     System.out.println("Closing");
+                     //隐藏窗口
+                     setVisible(false); //通过按钮隐藏窗口
+                     //关闭窗口
+                     System.exit(0);
+                 }
+         
+                 //窗口打开事件
+                 @Override
+                 public void windowOpened(WindowEvent e) {
+                     System.out.println("Open");
+                 }
+         
+                 //激活窗口事件（光标聚焦）
+                 @Override
+                 public void windowActivated(WindowEvent e) {
+                     System.out.println("Activate");
+                 }
+         
+                 //已经关闭
+                 //这个由于是结束进程的关闭，所以监听不到
+                 @Override
+                 public void windowClosed(WindowEvent e) {
+                     System.out.println("closed");
+                 }
+         
+                 //失去焦点
+                 //这个也监听不到
+                 @Override
+                 public void windowLostFocus(WindowEvent e) {
+                     System.out.println("lostFocus");
+                 }
+             }
+         }
+         ```
+
+      10. 键盘监听
+
+          ```java
+          package com.indexss;
+          
+          import java.awt.*;
+          import java.awt.event.KeyAdapter;
+          import java.awt.event.KeyEvent;
+          
+          public class TestKeyListener {
+              public static void main(String[] args) {
+                  new KeyFrame();
+              }
+          }
+          
+          class KeyFrame extends Frame {
+              public KeyFrame(){
+                  setBounds(200, 200 ,400, 400);
+                  setVisible(true);
+          
+                  this.addKeyListener(new KeyAdapter() {
+                      @Override
+                      public void keyPressed(KeyEvent e) {
+                          //获得当前键盘的码
+                          int keyCode = e.getKeyCode();
+                          System.out.println("你按下了"+keyCode);
+                      }
+                  });
+              }
+          }
+          
+          ```
+
+          
 
 3. Swing
+
+   
 
 ​		
 
