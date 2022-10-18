@@ -909,6 +909,383 @@
 
 3. Swing
 
+   1. 窗口 面板 标签居中
+
+      ```java
+      package com.indexss;
+      import javax.swing.*;
+      import java.awt.*;
+      public class JFrameTest01 {
+      
+          //init();
+          public void init(){
+              //jf为顶级窗口
+              JFrame jf = new JFrame("一个Jframe");
+              jf.setVisible(true);
+              jf.setBounds(200,200,400,400);
+      
+              //关闭事件 写好了 不用监听器
+              jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      
+              //设置文字
+              JLabel label = new JLabel("欢迎使用",SwingConstants.CENTER); //可以这样居中
+      //        jf.add(label);
+      //        jf.setBackground(Color.YELLOW);
+      
+              //容器 窗口本身也是个容器 需要容器实例化
+              Container contentPane = jf.getContentPane(); //获得一个容器
+              contentPane.setBackground(Color.CYAN);
+              contentPane.add(label);
+              //还可以这样居中
+      //        label.setHorizontalAlignment(SwingConstants.CENTER);
+          }
+          public static void main(String[] args) {
+              //建立一个窗口
+              new JFrameTest01().init();
+          }
+      }
+      
+      ```
+
+   2. 弹窗
+
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      import java.awt.event.ActionEvent;
+      
+      public class DialogDemo extends JFrame {
+          //主窗口
+          public DialogDemo(){
+              this.setSize(700, 700);
+              this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+      
+              //JFrame放容器
+              Container contentPane = this.getContentPane();
+              contentPane.setBounds(100,100,100,100);
+              //绝对布局
+      //        contentPane.setLayout(null);
+              //按钮
+              JButton jButton = new JButton("点击弹出对话框");
+              jButton.setBounds(30,30,200,50);
+              contentPane.add(jButton);
+              jButton.setBounds(100,100,50,50);
+              pack();
+      
+              //点击这个按钮的时候，弹出一个弹窗
+              jButton.addActionListener(new AbstractAction() {
+                  @Override
+                  public void actionPerformed(ActionEvent e) {
+                      //弹窗
+                      MyDialogDemo myDialogDemo = new MyDialogDemo();
+                  }
+              });
+              this.setVisible(true);
+      
+          }
+          public static void main(String[] args) {
+              new DialogDemo();
+          }
+      }
+      //弹出的窗口
+      class MyDialogDemo extends JDialog{
+          public MyDialogDemo(){
+              this.setVisible(true);
+              this.setBounds(300,300,500,500);
+              Container contentPane = this.getContentPane();
+      
+              contentPane.setSize(100,100);
+              contentPane.add(new Label("hello world"));
+      
+              contentPane.setVisible(true);
+      
+              JButton jButton = new JButton("关闭");
+              jButton.setSize(50,50);
+              jButton.addActionListener(new AbstractAction() {
+                  @Override
+                  public void actionPerformed(ActionEvent e) {
+                      dispose();
+                  }
+              });
+              pack();
+              contentPane.add(jButton);
+          }
+      }
+      ```
+
+   3. 标签
+
+      lebel
+
+      ```
+      new JLabel("xxx")
+      ```
+
+      图标 icon
+
+      ```java
+      package com.indexss;
+      //图标 需要实现Icon类 Frame继承
+      
+      import javax.swing.*;
+      import java.awt.*;
+      
+      public class IconDemo extends JFrame implements Icon {
+          private int width;
+          private int height;
+          public static void main(String[] args) {
+              new IconDemo().init();
+          }
+          public IconDemo(int width, int height) {
+              this.width = width;
+              this.height = height;
+          }
+          public IconDemo(){}  // 无参构造
+          public void init(){
+              IconDemo iconDemo = new IconDemo(15,15);
+              //图标放在标签上， 按钮上
+              JLabel label = new JLabel("icontest",iconDemo,SwingConstants.CENTER);
+              Container contentPane = getContentPane();
+              contentPane.add(label);
+              this.setVisible(true);
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+          }
+      
+          @Override
+          public void paintIcon(Component c, Graphics g, int x, int y) {
+              g.fillOval(x, y, width, height);
+          }
+      
+          @Override
+          public int getIconWidth() {
+              return this.width;
+          }
+      
+          @Override
+          public int getIconHeight() {
+      
+              return this.height;
+          }
+      }
+      
+      ```
+
+      图片icon
+
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      import java.net.URL;
+      
+      public class ImageIconDemo extends JFrame{
+          public ImageIconDemo() throws HeadlessException {
+              super();
+              setBounds(200,200,500,500);
+              URL url = ImageIconDemo.class.getResource("tx.jpg");
+              JLabel label = new JLabel("imageIcon");
+              ImageIcon imageIcon = new ImageIcon(url);
+              label.setIcon(imageIcon);
+              label.setHorizontalAlignment(SwingConstants.CENTER);
+              label.setSize(200,200);
+              Container contentPane = getContentPane();
+              contentPane.setSize(200,200);
+              contentPane.add(label);
+              setVisible(true);
+              setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+          }
+      
+          public static void main(String[] args) {
+              new ImageIconDemo();
+          }
+      }
+      
+      ```
+
+      
+
+   4. 面板
+
+      JPanel
+
+      ```java
+      package com.indexss;
+      import javax.swing.*;
+      import java.awt.*;
+      public class JPanelDemo extends JFrame {
+          public JPanelDemo() throws HeadlessException {
+              Container contentPane = this.getContentPane();
+              contentPane.setLayout(new GridLayout(2,1,10,10));
+              JPanel jPanel = new JPanel(new GridLayout(1,3));
+              jPanel.add(new JButton("1"));
+              jPanel.add(new JButton("1"));
+              jPanel.add(new JButton("1"));
+              contentPane.add(jPanel);
+              this.setVisible(true);
+              this.setBounds(200,200,200,200);
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      
+          }
+          public static void main(String[] args) {
+              new JPanelDemo();
+          }
+      }
+      ```
+
+      Jscroll
+
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      
+      public class JScrollDemo extends JFrame {
+          public JScrollDemo() throws HeadlessException {
+              Container contentPane = this.getContentPane();
+              //文本域
+              JTextArea jTextArea = new JTextArea();
+              jTextArea.setText("欢迎打开程序");
+      //        contentPane.add(jTextArea);
+      //        contentPane.setVisible(true);
+              //scroll面板
+              JScrollPane jScrollPane = new JScrollPane(jTextArea);
+              contentPane.add(jScrollPane);
+              this.setBounds(100,100,300,150);
+              this.setVisible(true);
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+          }
+      
+          public static void main(String[] args) {
+              new JScrollDemo();
+          }
+      }
+      
+      
+      ```
+
+      
+
+   5. 按钮
+
+      图片按钮
+
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      import java.net.URL;
+      
+      public class JButtonDemo01 extends JFrame {
+          public static void main(String[] args) {
+              new JButtonDemo01();
+          }
+      
+          public JButtonDemo01(){
+              Container contentPane = this.getContentPane();
+      
+              URL url = JButtonDemo01.class.getResource("tx.jpg");
+      //        Icon icon = new ImageIcon(url);
+              ImageIcon imageIcon = new ImageIcon(url);
+              //图标放在按钮上
+              JButton jButton = new JButton();
+              jButton.setIcon(imageIcon);
+              jButton.setToolTipText("hello world");
+              contentPane.add(jButton);
+      
+              setVisible(true);
+              setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      
+          }
+      }
+      ```
+
+      单选
+
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      
+      public class JButtonDemo02 extends JFrame {
+          public static void main(String[] args) {
+              new JButtonDemo02();
+          }
+      
+          public JButtonDemo02() throws HeadlessException {
+              Container contentPane = this.getContentPane();
+      
+              //单选框
+              JRadioButton jRadioButton01 = new JRadioButton("01");
+              JRadioButton jRadioButton02 = new JRadioButton("02");
+              JRadioButton jRadioButton03 = new JRadioButton("03");
+      
+              //由于单选框只能选择一个，所以要分组
+              ButtonGroup buttonGroup = new ButtonGroup();
+              buttonGroup.add(jRadioButton01);
+              buttonGroup.add(jRadioButton02);
+              buttonGroup.add(jRadioButton03);
+      
+              contentPane.add(jRadioButton01, BorderLayout.NORTH);
+              contentPane.add(jRadioButton02, BorderLayout.CENTER);
+              contentPane.add(jRadioButton03, BorderLayout.SOUTH);
+      
+      
+              this.setVisible(true);
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+              this.setBounds(200,200,400,400);
+          }
+      }
+      
+      
+      ```
+
+      
+
+      多选
+
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      
+      public class JButtonDemo02 extends JFrame {
+          public static void main(String[] args) {
+              new JButtonDemo02();
+          }
+          public JButtonDemo02() throws HeadlessException {
+              Container contentPane = this.getContentPane();
+              //多选框
+              JCheckBox jCheckBox01 = new JCheckBox("01");
+              JCheckBox jCheckBox02 = new JCheckBox("02");
+      
+              contentPane.add(jCheckBox01, BorderLayout.NORTH);
+              contentPane.add(jCheckBox02, BorderLayout.CENTER);
+              
+              this.setVisible(true);
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+              this.setBounds(200,200,400,400);
+          }
+      }
+      
+      ```
+
+      
+
+   6. 列表
+
+      下拉框
+
+      列表框
+
+   7. 文本框
+
    
 
 ​		
