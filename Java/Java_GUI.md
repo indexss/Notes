@@ -1282,11 +1282,184 @@
 
       下拉框
 
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      import java.awt.event.ActionEvent;
+      import java.awt.event.ItemEvent;
+      import java.awt.event.ItemListener;
+      
+      public class TestComboBoxDemo01 extends JFrame {
+          public TestComboBoxDemo01() throws HeadlessException {
+      
+              Container contentPane = this.getContentPane();
+      
+              JComboBox status = new JComboBox();
+              status.addItem(null);
+              status.addItem("正在上映");
+              status.addItem("已下架");
+              status.addItem("即将上映");
+      
+              contentPane.add(status);
+      
+              status.addItemListener(new ItemListener() {
+                  @Override
+                  public void itemStateChanged(ItemEvent e) {
+                      String item = (String) e.getItem();
+                      System.out.println(item);
+                  }
+              });
+      
+              this.setBounds(200,200,400,400);
+              this.setVisible(true);
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+          }
+      
+          public static void main(String[] args) {
+              new TestComboBoxDemo01();
+          }
+      }
+      
+      ```
+   
+      
+   
       列表框
+   
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      
+      public class TestDemoList02 extends JFrame {
+          public static void main(String[] args) {
+              new TestDemoList02();
+          }
+      
+          public TestDemoList02() throws HeadlessException {
+              Container contentPane = this.getContentPane();
+              contentPane.setSize(10,10);
+              contentPane.setLayout(new GridLayout(8,3));
+              //生成列表的内容
+              String[] contents = {"1","2","3"};
+              //列表中需要放内容
+              JList jList = new JList(contents);
+      
+              contentPane.add(jList);
+      
+      
+              this.setVisible(true);
+              this.setSize(500,300);
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+          }
+      }
+      
+      ```
+   
+      
+   
+   7. 文本框 
+   
+      普通文本框 + 绝对布局练习
+   
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      
+      public class TestJTextFiledDemo extends JFrame {
+          public TestJTextFiledDemo() throws HeadlessException {
+              Container contentPane = this.getContentPane();
+              contentPane.setLayout(null); //绝对布局
+      
+              JTextField jTextField = new JTextField("hello");
+              JTextField jTextField2 = new JTextField("world", 20);
+      
+              jTextField.setBounds(10,10,40,10);
+              jTextField2.setBounds(50,50,40,20);
+      
+              contentPane.add(jTextField);
+              contentPane.add(jTextField2);
+      
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+              this.setBounds(100,100,500,300);
+              this.setVisible(true);
+          }
+      
+          public static void main(String[] args) {
+              new TestJTextFiledDemo();
+          }
+      }
+      
+      ```
+   
+      原生密码框
+   
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      
+      public class TestJPasswordFiledDemo extends JFrame {
+          public TestJPasswordFiledDemo() throws HeadlessException {
+              Container contentPane = this.getContentPane();
+              JPasswordField jPasswordField = new JPasswordField();
+              jPasswordField.setEchoChar('&');
+              contentPane.add(jPasswordField);
+      
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+              this.setBounds(200,200,500,300);
+              this.setVisible(true);
+          }
+      
+          public static void main(String[] args) {
+              new TestJPasswordFiledDemo(); 
+          }
+      }
+      
+      ```
+   
+      文本域
+   
+      ```java
+      package com.indexss;
+      
+      import javax.swing.*;
+      import java.awt.*;
+      
+      public class JScrollDemo extends JFrame {
+          public JScrollDemo() throws HeadlessException {
+              Container contentPane = this.getContentPane();
+              //文本域
+              JTextArea jTextArea = new JTextArea();
+              jTextArea.setText("欢迎打开程序");
+      //        contentPane.add(jTextArea);
+      //        contentPane.setVisible(true);
+              //scroll面板
+              JScrollPane jScrollPane = new JScrollPane(jTextArea);
+              contentPane.add(jScrollPane);
+              this.setBounds(100,100,300,150);
+              this.setVisible(true);
+              this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+          }
+      
+          public static void main(String[] args) {
+              new JScrollDemo();
+          }
+      }
+      ```
+   
 
-   7. 文本框
+4. 贪吃蛇游戏
 
    
+
+
 
 ​		
 
