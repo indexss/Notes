@@ -1,3 +1,7 @@
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=indexss/Notes&type=Timeline)](https://star-history.com/#indexss/Notes&Timeline)
+
 ## 我的部分笔记
 
 ---
